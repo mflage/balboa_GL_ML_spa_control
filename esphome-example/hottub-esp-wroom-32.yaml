@@ -1,0 +1,54 @@
+esphome:
+  name: hottub
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+logger:
+api:
+ota:
+  - platform: esphome
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+external_components:
+  - source: github://mflage/balboa_GL_ML_spa_control
+    components: [balboa_gl]
+
+uart:
+  id: tub_uart
+  rx_pin: GPIO19
+  tx_pin: GPIO23
+  baud_rate: 115200
+
+balboa_gl:
+  id: tub
+  uart_id: tub_uart
+  panel_select_pin: GPIO18   # topside connector pin 5
+  flow_control_pin: GPIO22   # MAX485 DE/RE
+
+climate:
+  - platform: balboa_gl
+    name: Hot tub
+
+select:
+  - platform: balboa_gl
+    pump1: {name: Pump 1, dual_speed: true}
+    pump2: {name: Pump 2}
+    aux: {name: Aux}
+    mode: {name: Mode}
+
+switch:
+  - platform: balboa_gl
+    light: {name: Hot tub light}
+
+binary_sensor:
+  - platform: balboa_gl
+    heater: {name: Heater}
+
+text_sensor:
+  - platform: balboa_gl
+    status: {name: Status}

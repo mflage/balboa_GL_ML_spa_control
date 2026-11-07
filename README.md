@@ -9,7 +9,7 @@ If you have the Balboa GS series please try - https://github.com/MagnusPer/Balbo
 [Install Guide](https://github.com/netmindz/balboa_GL_ML_spa_control/wiki/Install-Guide)
 
 ## ESPHome component
-Instead of flashing the standalone firmware you can use this as an [ESPHome external component](https://esphome.io/components/external_components.html) (ESP32, ESP-IDF or Arduino). See [esphome-example/hottub.yaml](esphome-example/hottub.yaml) for a full config:
+Instead of flashing the standalone firmware you can use this as an [ESPHome external component](https://esphome.io/components/external_components.html) (ESP32, ESP-IDF or Arduino). See [esphome-example/](esphome-example/) (ESP32, ESP-WROOM-32, ESP8266) for a full config:
 
 ```yaml
 external_components:
