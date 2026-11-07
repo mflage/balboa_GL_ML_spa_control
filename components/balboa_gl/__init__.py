@@ -23,8 +23,8 @@ CONFIG_SCHEMA = (
             cv.GenerateID(): cv.declare_id(BalboaGL),
             # Pin 5 of the topside connector: LOW while the controller talks to our panel
             cv.Required(CONF_PANEL_SELECT_PIN): pins.gpio_input_pin_schema,
-            # RS485 driver enable (DE/RE of the MAX485 board)
-            cv.Required(CONF_FLOW_CONTROL_PIN): pins.gpio_output_pin_schema,
+            # RS485 driver enable (DE/RE of the MAX485 board); omit for auto-direction boards
+            cv.Optional(CONF_FLOW_CONTROL_PIN): pins.gpio_output_pin_schema,
         }
     )
     .extend(cv.COMPONENT_SCHEMA)
@@ -41,4 +41,5 @@ async def to_code(config):
     await cg.register_component(var, config)
     await uart.register_uart_device(var, config)
     cg.add(var.set_panel_select_pin(await cg.gpio_pin_expression(config[CONF_PANEL_SELECT_PIN])))
-    cg.add(var.set_flow_control_pin(await cg.gpio_pin_expression(config[CONF_FLOW_CONTROL_PIN])))
+    if CONF_FLOW_CONTROL_PIN in config:
+        cg.add(var.set_flow_control_pin(await cg.gpio_pin_expression(config[CONF_FLOW_CONTROL_PIN])))

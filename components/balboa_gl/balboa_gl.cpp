@@ -62,8 +62,10 @@ void BalboaGLSwitch::write_state(bool state) {
 
 void BalboaGL::setup() {
   this->panel_select_pin_->setup();
-  this->flow_control_pin_->setup();
-  this->flow_control_pin_->digital_write(false);
+  if (this->flow_control_pin_ != nullptr) {
+    this->flow_control_pin_->setup();
+    this->flow_control_pin_->digital_write(false);
+  }
   // The panel-select window is only a few ms long, so we must be polled as fast as possible
   this->high_freq_.start();
 }
@@ -71,7 +73,7 @@ void BalboaGL::setup() {
 void BalboaGL::dump_config() {
   ESP_LOGCONFIG(TAG, "Balboa GL/ML spa:");
   LOG_PIN("  Panel select pin: ", this->panel_select_pin_);
-  LOG_PIN("  Flow control pin: ", this->flow_control_pin_);
+  LOG_PIN("  Flow control pin: ", this->flow_control_pin_);  // handles nullptr
 }
 
 void BalboaGL::drain_rx_() {
@@ -302,12 +304,14 @@ void BalboaGL::send_command_() {
   this->command_pending_ = true;
 
   const Command &cmd = this->queue_.front();
-  this->flow_control_pin_->digital_write(true);
+  if (this->flow_control_pin_ != nullptr)
+    this->flow_control_pin_->digital_write(true);
   delayMicroseconds(TX_ENABLE_DELAY_US);
   this->write_array(cmd.data(), cmd.size());
   this->flush();
   delayMicroseconds(TX_DONE_DELAY_US);
-  this->flow_control_pin_->digital_write(false);
+  if (this->flow_control_pin_ != nullptr)
+    this->flow_control_pin_->digital_write(false);
   if (this->panel_select_pin_->digital_read())
     ESP_LOGW(TAG, "Panel select went high before command was sent");
 }

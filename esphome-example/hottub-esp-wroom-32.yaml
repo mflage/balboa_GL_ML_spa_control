@@ -28,7 +28,7 @@ balboa_gl:
   id: tub
   uart_id: tub_uart
   panel_select_pin: GPIO18   # topside connector pin 5
-  flow_control_pin: GPIO22   # MAX485 DE/RE
+  flow_control_pin: GPIO22   # MAX485 DE/RE, omit for auto-direction RS485 boards
 
 climate:
   - platform: balboa_gl
