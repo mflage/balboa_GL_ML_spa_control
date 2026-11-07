@@ -8,6 +8,19 @@ If you have the Balboa GS series please try - https://github.com/MagnusPer/Balbo
 
 [Install Guide](https://github.com/netmindz/balboa_GL_ML_spa_control/wiki/Install-Guide)
 
+## ESPHome component
+Instead of flashing the standalone firmware you can use this as an [ESPHome external component](https://esphome.io/components/external_components.html) (ESP32, ESP-IDF or Arduino). See [esphome-example/hottub.yaml](esphome-example/hottub.yaml) for a full config:
+
+```yaml
+external_components:
+  - source: github://mflage/balboa_GL_ML_spa_control
+    components: [balboa_gl]
+
+uart: {id: tub_uart, rx_pin: GPIO19, tx_pin: GPIO23, baud_rate: 115200}
+balboa_gl: {uart_id: tub_uart, panel_select_pin: GPIO18, flow_control_pin: GPIO22}
+```
+Platforms: `climate` (target/current temp), `select` (`pump1`, `pump2`, `aux`, `mode`; `dual_speed: true` for 2-speed pumps), `switch` (`light`), `binary_sensor` (`heater`), `text_sensor` (`status`).
+
 ## Current state
 App for ESP32 or ESP8266 that sends current status and allows remote control using Home Assistant and also simple web status page with live updates via WebSocket
 
