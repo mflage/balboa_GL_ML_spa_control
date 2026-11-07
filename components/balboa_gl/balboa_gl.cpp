@@ -104,7 +104,8 @@ void BalboaGL::loop() {
   }
 
   uint8_t first;
-  if (!this->peek_byte(&first))
+  // peek_byte() blocks for up to 100 ms on an empty buffer, so check first
+  if (!this->available() || !this->peek_byte(&first))
     return;
   size_t len = first == 0xFA ? FA_LENGTH : first == 0xAE ? AE_LENGTH : first == 0xFB ? FB_LENGTH : 0;
   if (len == 0) {
